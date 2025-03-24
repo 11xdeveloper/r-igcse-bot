@@ -5,16 +5,20 @@
   "scripts": {
     "start": "bun src/index.ts",
     "dev": "bun --watch src/index.ts",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate",
     "format": "biome format --write .",
     "lint": "biome lint .",
     "lint:fix": "biome lint --fix ."
   },
   "dependencies": {
+    "@prisma/client": "^6.5.0",
     "discord.js": "^14.18.0"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@types/bun": "latest",
+    "prisma": "^6.5.0",
     "typescript": "^5"
   }
 }
