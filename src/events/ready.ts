@@ -1,9 +1,11 @@
-import type { Client, ClientEvents, Events } from "discord.js";
+import type { Events } from "discord.js";
+import type { Event } from "@/events";
 
-export const once = true;
-export function execute(
-	client: Client,
-	...args: ClientEvents[Events.ClientReady]
-) {
-	console.log(`Ready! Logged in as ${client.user?.tag}`);
-}
+const ClientReady: Event<Events.ClientReady> = {
+	once: true,
+	execute(_client, client) {
+		console.log(`Ready! Logged in as ${client.user?.tag}`);
+	},
+};
+
+export default ClientReady;
