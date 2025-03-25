@@ -14,16 +14,14 @@
 		"indentStyle": "tab",
 		"lineEnding": "crlf"
 	},
-	"organizeImports": {
-		"enabled": true
-	},
 	"linter": {
 		"ignore": ["process-env.d.ts"],
 		"enabled": true,
 		"rules": {
 			"all": true,
 			"style": {
-				"noDefaultExport": "off"
+				"noDefaultExport": "off",
+				"useNamingConvention": "off"
 			},
 			"suspicious": {
 				"noConsole": "off",
