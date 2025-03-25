@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": ["package.json"]
+		"ignore": ["package.json", "node_modules"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -18,9 +18,23 @@
 		"enabled": true
 	},
 	"linter": {
+		"ignore": ["process-env.d.ts"],
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"all": true,
+			"style": {
+				"noDefaultExport": "off"
+			},
+			"suspicious": {
+				"noConsole": "off",
+				"noConsoleLog": "off"
+			},
+			"correctness": {
+				"noNodejsModules": "off"
+			},
+			"complexity": {
+				"useSimplifiedLogicExpression": "off"
+			}
 		}
 	},
 	"json": {
