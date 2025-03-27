@@ -3,7 +3,7 @@ import type { Event } from "@/events";
 import { syncCommands } from "@/commands";
 import { isBotDev } from "@/utils";
 
-export const MessageCreate: Event<Events.MessageCreate> = {
+export const MessageCreateEvent: Event<Events.MessageCreate> = {
 	once: false,
 	async execute(client, message) {
 		if (message.author.bot) {
