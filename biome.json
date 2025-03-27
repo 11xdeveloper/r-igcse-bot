@@ -27,7 +27,8 @@
 				"noConsoleLog": "off"
 			},
 			"correctness": {
-				"noNodejsModules": "off"
+				"noNodejsModules": "off",
+				"useImportExtensions": "off"
 			},
 			"complexity": {
 				"useSimplifiedLogicExpression": "off"
