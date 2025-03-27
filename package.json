@@ -9,7 +9,8 @@
     "db:migrate": "prisma migrate",
     "format": "biome format --write .",
     "lint": "biome lint .",
-    "lint:fix": "biome lint --fix ."
+    "lint:fix": "biome lint --fix .",
+    "check": "bun run lint && tsc --noEmit"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",
