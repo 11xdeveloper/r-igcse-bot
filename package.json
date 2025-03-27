@@ -6,7 +6,6 @@
     "start": "bun src/index.ts",
     "dev": "bun --watch src/index.ts",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate",
     "format": "biome format --write .",
     "lint": "biome lint .",
     "lint:fix": "biome lint --fix .",

@@ -4,33 +4,343 @@ generator client {
 
 datasource db {
   provider = "mongodb"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL") // The database name 'r-igcse-bot' should be included in the connection URL
 }
 
+// Application
+model Application {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId            String
+  name               String
+  description        String
+  emoji              String?
+  questions          String[]
+  requiredRoles      String[]
+  submissionChannelId String
+
+  @@map("applications")
+}
+
+// ChannelLockdown
+model ChannelLockdown {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId    String
+  channelId  String
+  timestamp  Int
+  reason     String?
+  lockedBy   String
+
+  @@map("channellockdowns")
+}
+
+// ClosedDmThread
+model ClosedDmThread {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId   String
+  userId    String
+  messageId String
+
+  @@map("closeddmthreads")
+}
+
+// ColorRole
+model ColorRole {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId   String
+  roleId    String
+  colorHex  String
+  colorName String
+  name      String
+  position  Int
+
+  @@map("colorroles")
+}
+
+// ConfessionBan
+model ConfessionBan {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId String
+  userId  String
+  reason  String?
+
+  @@map("confessionbans")
+}
+
+// DmGuildPreference
+model DmGuildPreference {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String
+  guildIds String[]
+
+  @@map("dmguildpreferences")
+}
+
+// FeedbackChannel
+model FeedbackChannel {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId   String
+  channelId String
+  messageId String
+  userId    String
+
+  @@map("feedbackchannels")
+}
+
+// ForcedMute
+model ForcedMute {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId  String
+  userId   String
+  mutedBy  String
+  reason   String?
+
+  @@map("forcedmutes")
+}
+
+// GuildPreferences
 model GuildPreferences {
-  id              String @id @default(auto()) @map("_id") @db.ObjectId
-  guildId         String @unique
-  modlogChannelId String
+  id                        String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId                   String   @unique
+  repEnabled                Boolean  @default(false)
+  repDisabledChannelIds     String[]
+  hotmSessionOngoing        Boolean? @default(false)
+  modlogChannelId           String?
+  generalLogsChannelId      String?
+  actionRequiredChannelId   String?
+  welcomeChannelId          String?
+  confessionsChannelId      String?
+  confessionApprovalChannelId String?
+  hostSessionApprovalChannelId String?
+  countingChannelId         String?
+  hotmResultsChannelId      String?
+  hotmResultsEmbedId        String?
+  hostSessionChannelId      String?
+  archiveSessionCategoryId  String?
+  modmailCreateChannelId    String?
+  modmailThreadsChannelId   String?
+  modmailLogsChannelId      String?
+  closedDmChannelId         String?
+  banAppealFormLink         String?
+  moderatorRoleId           String?
+  forcedMuteRoleId          String?
+  welcomeChannelMessage     String?
+  welcomeDMMessage          String?
+  groupStudyChannelId       String?
+  keywordRequestChannelId   String?
+  tagResourceApprovalChannelId String?
+
+  @@map("guildpreferences")
 }
 
+// HOTM
+model HOTM {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId String
+  userId  String
+  score   Int
+
+  @@map("hotms")
+}
+
+// HOTMBlacklist
+model HOTMBlacklist {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId String
+  userId  String
+  reason  String?
+
+  @@map("hotmblacklists")
+}
+
+// HOTMUser
+model HOTMUser {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId String
+  userId  String
+
+  @@map("hotmusers")
+}
+
+// HostSession
+model HostSession {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId         String
+  teachers        String[]
+  studyPingRoleId String
+  startDate       Int
+  endDate         Int
+  accepted        Boolean  @default(false)
+  scheduled       Boolean? @default(false)
+  messageId       String?  @unique
+  contents        String[]
+  channelId       String?
+  scheduledEventId String?
+
+  @@map("hostsessions")
+}
+
+// Keyword
+model Keyword {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId     String
+  addedBy     String
+  keyword     String
+  description String
+  
+  @@map("keywords")
+}
+
+// OldPinsThread
+model OldPinsThread {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId   String
+  channelId String
+  threadId  String
+
+  @@map("oldpinsthreads")
+}
+
+// PracticeSession
+model PracticeSession {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId        String
+  userId         String
+  subjectId      String
+  topicGroupsIds String[]
+  topicIds       String[]
+  limitTopics    Boolean  @default(false)
+  minimumYear    Int
+  duration       Int
+  questionType   String
+  mcqCount       Int?
+  frqCount       Int?
+  messageIds     String[]
+
+  @@map("practicesessions")
+}
+
+// PrivateDmThread
+model PrivateDmThread {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId   String
+  userId    String
+  messageId String
+
+  @@map("privatedmthreads")
+}
+
+// Punishment
 model Punishment {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  guildId       String
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  caseId       Int
   actionAgainst String
-  actionBy      String
-  action        Action
-  duration      Int?
-  caseId        Int
-  reason        String
-  points        Int
-  when          DateTime
+  actionBy     String
+  reason       String?
+  action       String
+  duration     Int?
+  when         DateTime
+  points       Int
+  guildId      String
+
+  @@map("punishments")
 }
 
-enum Action {
-  Warn
-  Kick
-  Timeout
-  RemoveTimeout
-  Ban
-  Unban
+// Question
+model Question {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  subject        String
+  season         String
+  year           Int
+  paper          Int
+  variant        Int
+  questions      String[]
+  answers        Json      // Using Json type for mixed type (string or string[])
+  topics         String[]
+  questionNumber Int
+  board          String
+
+  @@map("questions")
+}
+
+// ReactionRole
+model ReactionRole {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId   String
+  messageId String
+  roleId    String
+
+  @@map("reactionroles")
+}
+
+// Reputation
+model Reputation {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId String
+  userId  String
+  rep     Int
+
+  @@map("reputations")
+}
+
+// ResourceTag
+model ResourceTag {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId         String
+  submittedBy     String
+  messageId       String?
+  categoryId      String
+  url             String
+  title           String
+  description     String?
+  tags            String[]
+
+  @@map("resourcetags")
+}
+
+// ScheduledMessage
+model ScheduledMessage {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId      String
+  channelId    String
+  content      String
+  time         Int
+  recurring    String?
+  mentions     String[]
+
+  @@map("scheduledmessages")
+}
+
+// StickyMessage
+model StickyMessage {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId      String
+  channelId    String   @unique
+  messageId    String?
+  content      String
+  allowedRoles String[]
+  allowMention Boolean  @default(false)
+  ignoreThreads Boolean @default(true)
+
+  @@map("stickymessages")
+}
+
+// StickyPinnedMessage
+model StickyPinnedMessage {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId   String
+  channelId String
+  messageId String
+
+  @@map("stickypinnedmessages")
+}
+
+// StudyChannel
+model StudyChannel {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId     String
+  channelId   String
+  allowedRoles String[]
+  cooldown    Int
+
+  @@map("studychannels")
 }
