@@ -13,9 +13,11 @@
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",
+    "bufferutil": "^4.0.9",
     "discord.js": "^14.18.0",
     "redis": "^4.7.0",
-    "redis-om": "^0.4.7"
+    "redis-om": "^0.4.7",
+    "zlib-sync": "^0.1.9"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
