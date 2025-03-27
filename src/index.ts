@@ -1,6 +1,7 @@
 import { Client, GatewayIntentBits } from "discord.js";
 import { registerEvents } from "@/events";
 import { registerCommands } from "@/commands";
+import { registerCrons } from "@/cron";
 
 const client = new Client({
 	intents: [
@@ -28,5 +29,6 @@ const client = new Client({
 
 await registerCommands();
 await registerEvents(client);
+await registerCrons(client);
 
 await client.login(process.env.BOT_TOKEN);
