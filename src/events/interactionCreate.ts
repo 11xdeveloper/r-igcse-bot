@@ -2,9 +2,9 @@ import type { Events } from "discord.js";
 import type { Event } from "@/events";
 import { commands } from "@/commands";
 
-const InteractionCreate: Event<Events.InteractionCreate> = {
+export const InteractionCreate: Event<Events.InteractionCreate> = {
 	once: false,
-	async execute(client, interaction) {
+	async execute(_client, interaction) {
 		if (interaction.isChatInputCommand()) {
 			const command = commands.get(interaction.commandName);
 
@@ -21,5 +21,3 @@ const InteractionCreate: Event<Events.InteractionCreate> = {
 		}
 	},
 };
-
-export default InteractionCreate;

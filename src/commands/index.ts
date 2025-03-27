@@ -1,22 +1,31 @@
 import {
 	type Awaitable,
+	type ChatInputCommandInteraction,
 	type Client,
 	Collection,
-	type CommandInteraction,
 	Routes,
 	type SlashCommandBuilder,
+	type SlashCommandOptionsOnlyBuilder,
 } from "discord.js";
 import { readdir } from "node:fs/promises";
 import { join as joinPaths } from "node:path";
 import { isCodeFile } from "@/utils";
 
 export interface Command {
-	data: SlashCommandBuilder;
+	data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
 	mainGuildOnly: boolean;
-	execute: (interaction: CommandInteraction) => Awaitable<void>;
+	execute: (interaction: ChatInputCommandInteraction) => Awaitable<void>;
 }
 
 export const commands: Collection<string, Command> = new Collection();
+
+const isCommand = (value: unknown): value is Command => {
+	if (typeof value !== "object" || value === null) {
+		return false;
+	}
+
+	return "data" in value && "mainGuildOnly" in value && "execute" in value;
+};
 
 export const registerCommands = async () => {
 	const commandsDirPath = import.meta.dir;
@@ -29,13 +38,13 @@ export const registerCommands = async () => {
 
 		const filePath = joinPaths(commandsDirPath, file);
 
-		const {
-			default: command,
-		}: {
-			default: Command;
-		} = await import(filePath);
+		const exports = await import(filePath);
 
-		commands.set(command.data.name, command);
+		for (const exportValue of Object.values(exports)) {
+			if (isCommand(exportValue)) {
+				commands.set(exportValue.data.name, exportValue);
+			}
+		}
 	}
 };
 

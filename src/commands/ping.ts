@@ -1,7 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import type { Command } from "@/commands";
 
-const Ping: Command = {
+export const Ping: Command = {
 	data: new SlashCommandBuilder().setName("ping").setDescription("Pong!"),
 	mainGuildOnly: false,
 	async execute(interaction) {
@@ -18,5 +18,3 @@ const Ping: Command = {
 		});
 	},
 };
-
-export default Ping;

@@ -1,8 +1,30 @@
-import { Client } from "discord.js";
+import { Client, GatewayIntentBits } from "discord.js";
 import { registerEvents } from "@/events";
 import { registerCommands } from "@/commands";
 
-const client = new Client({ intents: [] });
+const client = new Client({
+	intents: [
+		GatewayIntentBits.AutoModerationConfiguration,
+		GatewayIntentBits.AutoModerationExecution,
+		GatewayIntentBits.DirectMessageReactions,
+		GatewayIntentBits.DirectMessageTyping,
+		GatewayIntentBits.DirectMessages,
+		GatewayIntentBits.GuildIntegrations,
+		GatewayIntentBits.GuildInvites,
+		GatewayIntentBits.GuildMembers,
+		GatewayIntentBits.GuildMessageTyping,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.GuildModeration,
+		GatewayIntentBits.GuildScheduledEvents,
+		GatewayIntentBits.GuildVoiceStates,
+		GatewayIntentBits.GuildWebhooks,
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.MessageContent,
+		GatewayIntentBits.GuildMessagePolls,
+		GatewayIntentBits.DirectMessagePolls,
+		GatewayIntentBits.GuildMessageReactions,
+	],
+});
 
 await registerCommands();
 await registerEvents(client);

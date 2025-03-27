@@ -6,3 +6,31 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+model GuildPreferences {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  guildId         String @unique
+  modlogChannelId String
+}
+
+model Punishment {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId       String
+  actionAgainst String
+  actionBy      String
+  action        Action
+  duration      Int?
+  caseId        Int
+  reason        String
+  points        Int
+  when          DateTime
+}
+
+enum Action {
+  Warn
+  Kick
+  Timeout
+  RemoveTimeout
+  Ban
+  Unban
+}
