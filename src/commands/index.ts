@@ -3,6 +3,8 @@ import {
 	type ChatInputCommandInteraction,
 	type Client,
 	Collection,
+	type ContextMenuCommandBuilder,
+	type ContextMenuCommandInteraction,
 	Routes,
 	type SlashCommandBuilder,
 	type SlashCommandOptionsOnlyBuilder,
@@ -11,15 +13,29 @@ import { readdir } from "node:fs/promises";
 import { join as joinPaths } from "node:path";
 import { isCodeFile } from "@/utils";
 
-export interface Command {
-	data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
-	mainGuildOnly: boolean;
-	execute: (interaction: ChatInputCommandInteraction) => Awaitable<void>;
+export enum CommandType {
+	Slash = "slash",
+	Menu = "menu",
 }
 
-export const commands: Collection<string, Command> = new Collection();
+export interface Command<T extends CommandType> {
+	data: T extends CommandType.Slash
+		? SlashCommandBuilder | SlashCommandOptionsOnlyBuilder
+		: ContextMenuCommandBuilder;
+	mainGuildOnly: boolean;
+	execute: (
+		interaction: T extends CommandType.Slash
+			? ChatInputCommandInteraction
+			: ContextMenuCommandInteraction,
+	) => Awaitable<void>;
+}
 
-const isCommand = (value: unknown): value is Command => {
+export const commands: Collection<
+	string,
+	Command<CommandType>
+> = new Collection();
+
+const isCommand = (value: unknown): value is Command<CommandType> => {
 	if (typeof value !== "object" || value === null) {
 		return false;
 	}

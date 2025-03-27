@@ -5,7 +5,7 @@ import { commands } from "@/commands";
 export const InteractionCreate: Event<Events.InteractionCreate> = {
 	once: false,
 	async execute(_client, interaction) {
-		if (interaction.isChatInputCommand()) {
+		if (interaction.isCommand()) {
 			const command = commands.get(interaction.commandName);
 
 			if (!command) {
