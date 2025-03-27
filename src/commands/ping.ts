@@ -1,7 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import type { Command, CommandType } from "@/commands";
 
-export const Ping: Command<CommandType.Slash> = {
+export const PingCommand: Command<CommandType.Slash> = {
 	data: new SlashCommandBuilder().setName("ping").setDescription("Pong!"),
 	mainGuildOnly: false,
 	async execute(interaction) {

@@ -7,7 +7,7 @@ import {
 } from "discord.js";
 import type { Command, CommandType } from "@/commands";
 
-export const TogglePin: Command<CommandType.Menu> = {
+export const TogglePinCommand: Command<CommandType.Menu> = {
 	data: new ContextMenuCommandBuilder()
 		.setName("Toggle Pinned")
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)

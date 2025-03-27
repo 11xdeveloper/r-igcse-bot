@@ -281,6 +281,7 @@ model Reputation {
   rep     Int
   guildId String
 
+  @@unique([userId, guildId])
   @@map("reputations")
 }
 

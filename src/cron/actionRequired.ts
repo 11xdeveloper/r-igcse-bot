@@ -46,7 +46,7 @@ export const actionRequired: Cron = {
 
 			const filteredPunishments = punishmentsAggregate
 				.map((p) => ({
-					_id: p.actionAgainst,
+					actionAgainst: p.actionAgainst,
 					totalPoints: p._sum.points || 0,
 					lastPunishment: p._max.when,
 				}))
@@ -62,7 +62,7 @@ export const actionRequired: Cron = {
 
 			for (const userPunishments of filteredPunishments) {
 				const member = await guild.members
-					.fetch(userPunishments._id)
+					.fetch(userPunishments.actionAgainst)
 					.catch(() => null);
 
 				if (!member) {
