@@ -6,7 +6,7 @@ import {
 	Schema,
 } from "redis-om";
 
-export type CachedKeyword = Keyword & Entity;
+export type CachedKeyword = Omit<Keyword, "id"> & Entity;
 
 const schema = new Schema("Keyword", {
 	guildId: { type: "string" },

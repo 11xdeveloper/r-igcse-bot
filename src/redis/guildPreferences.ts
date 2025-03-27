@@ -7,7 +7,7 @@ import {
 	Schema,
 } from "redis-om";
 
-export type CachedGuildPreferences = GuildPreferences & Entity;
+export type CachedGuildPreferences = Omit<GuildPreferences, "id"> & Entity;
 
 const schema = new Schema("GuildPreferences", {
 	guildId: { type: "string" },
