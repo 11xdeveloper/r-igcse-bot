@@ -1,0 +1,5 @@
+- Bun is the package manager and runtime
+- Biome is the linter and formatter
+- Prisma is the database and Redis is being used as a cache with redis-om-node
+- This is a discord.js v14 bot written in typescript for the r/IGCSE discord server
+- The old directory is for the old version of the bot

@@ -15,7 +15,7 @@
 		"lineEnding": "crlf"
 	},
 	"linter": {
-		"ignore": ["process-env.d.ts"],
+		"ignore": ["process-env.d.ts", "old"],
 		"enabled": true,
 		"rules": {
 			"all": true,
