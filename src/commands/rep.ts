@@ -1,6 +1,7 @@
 import {
 	Colors,
 	InteractionContextType,
+	MessageFlags,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
@@ -22,6 +23,10 @@ export const ReputationCommand: Command<CommandType.Slash> = {
 	mainGuildOnly: false,
 	async execute(interaction) {
 		if (!interaction.inCachedGuild()) {
+			await interaction.reply({
+				content: "This command can only be used in a server.",
+				flags: MessageFlags.Ephemeral,
+			});
 			return;
 		}
 
@@ -29,7 +34,7 @@ export const ReputationCommand: Command<CommandType.Slash> = {
 
 		const res = await prisma.reputation.findUnique({
 			where: {
-				userId_guildId: {
+				guildId_userId: {
 					guildId: interaction.guild.id,
 					userId: user.id,
 				},
@@ -133,7 +138,7 @@ export const SetReputationCommand: Command<CommandType.Slash> = {
 
 		await prisma.reputation.upsert({
 			where: {
-				userId_guildId: {
+				guildId_userId: {
 					guildId: interaction.guild.id,
 					userId: user.id,
 				},

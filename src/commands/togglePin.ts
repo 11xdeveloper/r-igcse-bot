@@ -16,10 +16,15 @@ export const TogglePinCommand: Command<CommandType.Menu> = {
 	mainGuildOnly: false,
 
 	async execute(interaction) {
-		if (
-			!interaction.inCachedGuild() ||
-			!interaction.isMessageContextMenuCommand()
-		) {
+		if (!interaction.isMessageContextMenuCommand()) {
+			return;
+		}
+
+		if (!interaction.inCachedGuild()) {
+			await interaction.reply({
+				content: "This command can only be used in a server.",
+				flags: MessageFlags.Ephemeral,
+			});
 			return;
 		}
 

@@ -2,12 +2,11 @@ import {
 	type Awaitable,
 	type ChatInputCommandInteraction,
 	type Client,
-	Collection,
+	type SharedSlashCommand,
 	type ContextMenuCommandBuilder,
 	type ContextMenuCommandInteraction,
+	Collection,
 	Routes,
-	type SlashCommandBuilder,
-	type SlashCommandOptionsOnlyBuilder,
 } from "discord.js";
 import { readdir } from "node:fs/promises";
 import { join as joinPaths } from "node:path";
@@ -20,7 +19,7 @@ export enum CommandType {
 
 export interface Command<T extends CommandType> {
 	data: T extends CommandType.Slash
-		? SlashCommandBuilder | SlashCommandOptionsOnlyBuilder
+		? SharedSlashCommand
 		: ContextMenuCommandBuilder;
 	mainGuildOnly: boolean;
 	execute: (

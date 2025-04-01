@@ -45,7 +45,7 @@ export class GuildPreferencesRepository extends Repository {
 	}
 
 	async get(guildId: string) {
-		const cachedRes = (await this.fetch(guildId)) as GuildPreferences;
+		const cachedRes = (await this.fetch(guildId)) as CachedGuildPreferences;
 
 		if (cachedRes.guildId) {
 			return cachedRes;
@@ -64,8 +64,11 @@ export class GuildPreferencesRepository extends Repository {
 		return res;
 	}
 
-	async set(guildId: string, preferences: GuildPreferences) {
-		const res = (await this.save(guildId, preferences)) as GuildPreferences;
+	async set(guildId: string, preferences: CachedGuildPreferences) {
+		const res = (await this.save(
+			guildId,
+			preferences,
+		)) as CachedGuildPreferences;
 
 		await this.expire(guildId, 120);
 

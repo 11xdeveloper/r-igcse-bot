@@ -20,7 +20,9 @@
 		"rules": {
 			"all": true,
 			"style": {
-				"useNamingConvention": "off"
+				"useNamingConvention": "off",
+				"useDefaultSwitchClause": "off",
+				"noNonNullAssertion": "off"
 			},
 			"suspicious": {
 				"noConsole": "off",

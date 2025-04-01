@@ -135,6 +135,7 @@ model HOTM {
   guildId  String
   votes    Int    @default(0)
 
+  @@unique([guildId, helperId])
   @@map("hotms")
 }
 
@@ -281,7 +282,7 @@ model Reputation {
   rep     Int
   guildId String
 
-  @@unique([userId, guildId])
+  @@unique([guildId, userId])
   @@map("reputations")
 }
 
