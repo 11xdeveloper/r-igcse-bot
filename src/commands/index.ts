@@ -17,7 +17,7 @@ export enum CommandType {
 	Menu = "menu",
 }
 
-export interface Command<T extends CommandType> {
+export interface Command<T extends CommandType = CommandType> {
 	data: T extends CommandType.Slash
 		? SharedSlashCommand
 		: ContextMenuCommandBuilder;
@@ -29,12 +29,9 @@ export interface Command<T extends CommandType> {
 	) => Awaitable<void>;
 }
 
-export const commands: Collection<
-	string,
-	Command<CommandType>
-> = new Collection();
+export const commands: Collection<string, Command> = new Collection();
 
-const isCommand = (value: unknown): value is Command<CommandType> => {
+const isCommand = (value: unknown): value is Command => {
 	if (typeof value !== "object" || value === null) {
 		return false;
 	}
