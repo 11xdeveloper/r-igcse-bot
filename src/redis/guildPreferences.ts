@@ -1,47 +1,19 @@
 import { prisma } from "@/prisma";
+import { type RedisConnection, Repository } from "redis-om";
+import { GuildPreferencesSchema } from "../../prisma/generated/zod";
+import { generateRedisSchema, type SchemaType } from "./schemaGenerator";
 import type { GuildPreferences } from "@prisma/client";
-import {
-	type Entity,
-	type RedisConnection,
-	Repository,
-	Schema,
-} from "redis-om";
 
-export type CachedGuildPreferences = Omit<GuildPreferences, "id"> & Entity;
+export type CachedGuildPreferences = SchemaType<GuildPreferences>;
 
-const schema = new Schema("GuildPreferences", {
-	guildId: { type: "string" },
-	repEnabled: { type: "boolean" },
-	repDisabledChannelIds: { type: "string[]" },
-	hotmSessionOngoing: { type: "boolean" },
-	modlogChannelId: { type: "string" },
-	generalLogsChannelId: { type: "string" },
-	actionRequiredChannelId: { type: "string" },
-	welcomeChannelId: { type: "string" },
-	confessionsChannelId: { type: "string" },
-	confessionApprovalChannelId: { type: "string" },
-	hostSessionApprovalChannelId: { type: "string" },
-	countingChannelId: { type: "string" },
-	hotmResultsChannelId: { type: "string" },
-	hotmResultsEmbedId: { type: "string" },
-	hostSessionChannelId: { type: "string" },
-	archiveSessionCategoryId: { type: "string" },
-	modmailCreateChannelId: { type: "string" },
-	modmailThreadsChannelId: { type: "string" },
-	modmailLogsChannelId: { type: "string" },
-	closedDmChannelId: { type: "string" },
-	banAppealFormLink: { type: "string" },
-	moderatorRoleId: { type: "string" },
-	forcedMuteRoleId: { type: "string" },
-	welcomeChannelMessage: { type: "string" },
-	welcomeDMMessage: { type: "string" },
-	groupStudyChannelId: { type: "string" },
-	keywordRequestsChannelId: { type: "string" },
-});
+export const guildPreferencesSchema = generateRedisSchema(
+	"GuildPreferences",
+	GuildPreferencesSchema,
+);
 
 export class GuildPreferencesRepository extends Repository {
 	constructor(clientOrConnection: RedisConnection) {
-		super(schema, clientOrConnection);
+		super(guildPreferencesSchema, clientOrConnection);
 	}
 
 	async get(guildId: string) {
