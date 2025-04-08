@@ -12,7 +12,7 @@
     "check": "bun run lint && tsc --noEmit"
   },
   "dependencies": {
-    "@prisma/client": "^6.5.0",
+    "@prisma/client": "^6.6.0",
     "bufferutil": "^4.0.9",
     "discord.js": "^14.18.0",
     "node-cron": "^3.0.3",
@@ -24,6 +24,7 @@
     "@biomejs/biome": "1.9.4",
     "@types/bun": "latest",
     "@types/node-cron": "^3.0.11",
+    "prism": "^4.1.2",
     "prisma": "^6.5.0",
     "typescript": "^5"
   }
