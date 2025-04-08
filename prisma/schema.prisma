@@ -4,96 +4,9 @@ generator client {
 
 datasource db {
   provider = "mongodb"
-  url      = env("DATABASE_URL") // The database name 'r-igcse-bot' should be included in the connection URL
+  url      = env("DATABASE_URL")
 }
 
-// Application
-model Application {
-  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
-  guildId             String
-  name                String
-  description         String
-  emoji               String?
-  questions           String[]
-  requiredRoles       String[]
-  submissionChannelId String
-
-  @@map("applications")
-}
-
-// ChannelLockdown
-model ChannelLockdown {
-  id             String @id @default(auto()) @map("_id") @db.ObjectId
-  guildId        String
-  channelId      String
-  startTimestamp String
-  endTimestamp   String
-
-  @@map("channellockdowns")
-}
-
-// ClosedDmThread
-model ClosedDmThread {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  userId   String
-  threadId String
-  guildId  String
-
-  @@map("closeddmthreads")
-}
-
-// ColorRole
-model ColorRole {
-  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
-  guildId            String
-  label              String
-  roleId             String
-  requirementRoleIds String[]
-  emoji              String?
-
-  @@map("colorroles")
-}
-
-// ConfessionBan
-model ConfessionBan {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  userHash String
-  guildId  String
-  reason   String
-
-  @@map("confessionbans")
-}
-
-// DmGuildPreference
-model DmGuildPreference {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  userId  String @unique
-  guildId String
-
-  @@map("dmguildpreferences")
-}
-
-// FeedbackChannel
-model FeedbackChannel {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  guildId   String
-  label     String
-  channelId String
-
-  @@map("feedbackchannels")
-}
-
-// ForcedMute
-model ForcedMute {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId     String   @unique
-  guildId    String
-  expiration DateTime
-
-  @@map("forcedmutes")
-}
-
-// GuildPreferences
 model GuildPreferences {
   id                           String   @id @default(auto()) @map("_id") @db.ObjectId
   guildId                      String   @unique
@@ -124,11 +37,17 @@ model GuildPreferences {
   groupStudyChannelId          String?
   keywordRequestChannelId      String?
   tagResourceApprovalChannelId String?
-
-  @@map("guildpreferences")
 }
 
-// HOTM
+model Reputation {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  userId  String
+  rep     Int
+  guildId String
+
+  @@unique([guildId, userId])
+}
+
 model HOTM {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   helperId String
@@ -136,103 +55,26 @@ model HOTM {
   votes    Int    @default(0)
 
   @@unique([guildId, helperId])
-  @@map("hotms")
 }
 
-// HOTMBlacklist
 model HOTMBlacklist {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   helperId  String
   guildId   String
   permanent Boolean @default(false)
 
-  @@map("hotmblacklists")
+  @@unique([guildId, helperId])
 }
 
-// HOTMUser
 model HOTMUser {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   userId  String
   guildId String
   voted   String[]
 
-  @@map("hotmusers")
+  @@unique([guildId, userId])
 }
 
-// HostSession
-model HostSession {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  guildId          String
-  teachers         String[]
-  studyPingRoleId  String
-  startDate        Int
-  endDate          Int
-  accepted         Boolean  @default(false)
-  scheduled        Boolean  @default(false)
-  messageId        String?  @unique
-  contents         String[]
-  channelId        String?
-  scheduledEventId String?
-
-  @@map("hostsessions")
-}
-
-// Keyword
-model Keyword {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  guildId     String
-  name        String
-  description String
-  aliases     String[]
-  tags        String[]
-  markdown    String
-  authorId    String
-  approved    Boolean  @default(false)
-
-  @@map("keywords")
-}
-
-// OldPinsThread
-model OldPinsThread {
-  id              String @id @default(auto()) @map("_id") @db.ObjectId
-  channelId       String
-  oldPinsThreadId String
-
-  @@map("oldpinsthreads")
-}
-
-// PracticeSession
-model PracticeSession {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  sessionId        String   @unique
-  channelId        String
-  threadId         String
-  guildId          String
-  subject          String
-  topics           String[]
-  limit            Int
-  minimumYear      Int
-  users            String[]
-  owner            String
-  private          Boolean
-  currentlySolving String
-  expireTime       DateTime
-  timeLimit        Int?
-
-  @@map("practicesessions")
-}
-
-// PrivateDmThread
-model PrivateDmThread {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  userId   String
-  threadId String
-  guildId  String
-
-  @@map("privatedmthreads")
-}
-
-// Punishment
 model Punishment {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   actionAgainst String
@@ -244,100 +86,12 @@ model Punishment {
   points        Int
   action        String
   duration      Int?
-
-  @@map("punishments")
 }
 
-// Question
-model Question {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  subject        String
-  season         String
-  year           Int
-  paper          Int
-  variant        Int
-  questions      String[]
-  answers        Json // Using Json type for mixed string or string[] type
-  topics         String[]
-  questionNumber Int
-  board          String
-
-  @@map("questions")
-}
-
-// ReactionRole
-model ReactionRole {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  emoji     String
-  roleId    String
-  messageId String
-
-  @@map("reactionroles")
-}
-
-// Reputation
-model Reputation {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  userId  String
-  rep     Int
-  guildId String
-
-  @@unique([guildId, userId])
-  @@map("reputations")
-}
-
-// ResourceTag
-model ResourceTag {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
-  guildId     String
-  title       String
-  description String
-  authorId    String
-  channelId   String
-  messageUrl  String
-
-  @@map("resourcetags")
-}
-
-// ScheduledMessage
-model ScheduledMessage {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  guildId      String
-  channelId    String
-  message      Json // Using Json type for MessageCreateOptions object
-  scheduleTime String
-
-  @@map("scheduledmessages")
-}
-
-// StickyMessage
-model StickyMessage {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  channelId   String
-  messageId   String?
-  message     Json // Using Json type for message object with content and embeds
-  stickTime   String?
-  unstickTime String?
-
-  @@map("stickymessages")
-}
-
-// StickyPinnedMessage
-model StickyPinnedMessage {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  channelId String @unique
-  messageId String @unique
-
-  @@map("stickypinnedmessages")
-}
-
-// StudyChannel
 model StudyChannel {
   id              String @id @default(auto()) @map("_id") @db.ObjectId
   guildId         String
   channelId       String @unique
   helperRoleId    String
   studyPingRoleId String @unique
-
-  @@map("studychannels")
 }
