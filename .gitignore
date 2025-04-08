@@ -1,6 +1,8 @@
 # windsurf context
 old
 
+# prisma generated files
+prisma/generated
 
 # dependencies (bun install)
 node_modules
