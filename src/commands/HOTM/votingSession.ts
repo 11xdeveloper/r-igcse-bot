@@ -118,9 +118,11 @@ async function handleStartSession(
 	});
 
 	await prisma.$transaction([
-		prisma.hOTM.deleteMany({ where: { guildId: interaction.guildId } }),
-		prisma.hOTMUser.deleteMany({ where: { guildId: interaction.guildId } }),
-		prisma.hOTMBlacklist.deleteMany({
+		prisma.hotmCandidate.deleteMany({
+			where: { guildId: interaction.guildId },
+		}),
+		prisma.hotmVoter.deleteMany({ where: { guildId: interaction.guildId } }),
+		prisma.hotmBlacklist.deleteMany({
 			where: {
 				guildId: interaction.guildId,
 				permanent: false,
@@ -199,7 +201,7 @@ async function handleBlacklist(
 
 	await interaction.deferReply({ ephemeral: true });
 
-	const existingBlacklist = await prisma.hOTMBlacklist.findFirst({
+	const existingBlacklist = await prisma.hotmBlacklist.findFirst({
 		where: {
 			guildId: interaction.guildId,
 			helperId: helper.id,
@@ -214,7 +216,7 @@ async function handleBlacklist(
 	}
 
 	// Add to blacklist
-	await prisma.hOTMBlacklist.create({
+	await prisma.hotmBlacklist.create({
 		data: {
 			guildId: interaction.guildId,
 			helperId: helper.id,
@@ -225,7 +227,7 @@ async function handleBlacklist(
 	// Reset their votes
 	await prisma.$transaction(async (tx) => {
 		// Reset the helper's votes
-		await tx.hOTM.delete({
+		await tx.hotmCandidate.delete({
 			where: {
 				guildId_helperId: {
 					guildId: interaction.guildId,
@@ -234,7 +236,7 @@ async function handleBlacklist(
 			},
 		});
 
-		const users = await tx.hOTMUser.findMany({
+		const users = await tx.hotmVoter.findMany({
 			where: {
 				guildId: interaction.guildId,
 				voted: {
@@ -245,7 +247,7 @@ async function handleBlacklist(
 
 		// Remove the helper from all users' voted arrays
 		for (const user of users) {
-			await tx.hOTMUser.update({
+			await tx.hotmVoter.update({
 				where: {
 					id: user.id,
 				},
@@ -290,7 +292,7 @@ async function handleUnblacklist(
 	await interaction.deferReply({ ephemeral: true });
 
 	// Check if the helper is blacklisted
-	const existingBlacklist = await prisma.hOTMBlacklist.findFirst({
+	const existingBlacklist = await prisma.hotmBlacklist.findFirst({
 		where: {
 			guildId: interaction.guildId,
 			helperId: helper.id,
@@ -305,7 +307,7 @@ async function handleUnblacklist(
 	}
 
 	// Remove from blacklist
-	await prisma.hOTMBlacklist.delete({
+	await prisma.hotmBlacklist.delete({
 		where: {
 			id: existingBlacklist.id,
 		},

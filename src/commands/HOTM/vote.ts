@@ -80,7 +80,7 @@ export const voteCommand: Command<CommandType.Slash> = {
 		}
 
 		// Check if the helper is blacklisted
-		const blacklistCheck = await prisma.hOTMBlacklist.findFirst({
+		const blacklistCheck = await prisma.hotmBlacklist.findFirst({
 			where: {
 				guildId: interaction.guildId,
 				helperId: helper.id,
@@ -95,15 +95,15 @@ export const voteCommand: Command<CommandType.Slash> = {
 		}
 
 		// Get or create user's voting record
-		let hotmUser = await prisma.hOTMUser.findFirst({
+		let hotmVoter = await prisma.hotmVoter.findFirst({
 			where: {
 				guildId: interaction.guildId,
 				userId: interaction.user.id,
 			},
 		});
 
-		if (!hotmUser) {
-			hotmUser = await prisma.hOTMUser.create({
+		if (!hotmVoter) {
+			hotmVoter = await prisma.hotmVoter.create({
 				data: {
 					guildId: interaction.guildId,
 					userId: interaction.user.id,
@@ -113,7 +113,7 @@ export const voteCommand: Command<CommandType.Slash> = {
 		}
 
 		// Check if user has already voted for this helper
-		if (hotmUser.voted.includes(helper.id)) {
+		if (hotmVoter.voted.includes(helper.id)) {
 			await interaction.editReply({
 				content: "You have already voted for this helper.",
 			});
@@ -122,7 +122,7 @@ export const voteCommand: Command<CommandType.Slash> = {
 
 		// Check if user has used all their votes
 		const MAX_VOTES = 3;
-		if (hotmUser.voted.length >= MAX_VOTES) {
+		if (hotmVoter.voted.length >= MAX_VOTES) {
 			await interaction.editReply({
 				content: `You have already used all ${MAX_VOTES} of your votes.`,
 			});
@@ -132,8 +132,8 @@ export const voteCommand: Command<CommandType.Slash> = {
 		// Transaction to update votes
 		await prisma.$transaction(async (tx) => {
 			// Update user's voting record
-			await tx.hOTMUser.update({
-				where: { id: hotmUser.id },
+			await tx.hotmVoter.update({
+				where: { id: hotmVoter.id },
 				data: {
 					voted: {
 						push: helper.id,
@@ -142,7 +142,7 @@ export const voteCommand: Command<CommandType.Slash> = {
 			});
 
 			// Increment helper's vote count or create new record
-			const existingHelperRecord = await tx.hOTM.findFirst({
+			const existingHelperRecord = await tx.hotmCandidate.findFirst({
 				where: {
 					guildId: interaction.guildId,
 					helperId: helper.id,
@@ -150,12 +150,12 @@ export const voteCommand: Command<CommandType.Slash> = {
 			});
 
 			if (existingHelperRecord) {
-				await tx.hOTM.update({
+				await tx.hotmCandidate.update({
 					where: { id: existingHelperRecord.id },
 					data: { votes: existingHelperRecord.votes + 1 },
 				});
 			} else {
-				await tx.hOTM.create({
+				await tx.hotmCandidate.create({
 					data: {
 						guildId: interaction.guildId,
 						helperId: helper.id,
@@ -166,7 +166,7 @@ export const voteCommand: Command<CommandType.Slash> = {
 		});
 
 		// Get updated vote count for the helper
-		const updatedHelper = await prisma.hOTM.findFirst({
+		const updatedHelper = await prisma.hotmCandidate.findFirst({
 			where: {
 				guildId: interaction.guildId,
 				helperId: helper.id,
@@ -191,7 +191,7 @@ export const voteCommand: Command<CommandType.Slash> = {
 		});
 
 		// Calculate remaining votes
-		const remainingVotes = MAX_VOTES - (hotmUser.voted.length + 1);
+		const remainingVotes = MAX_VOTES - (hotmVoter.voted.length + 1);
 		const votesMessage =
 			remainingVotes === 1
 				? "You have 1 vote remaining."

@@ -52,7 +52,7 @@ model Reputation {
   @@unique([guildId, userId])
 }
 
-model HOTM {
+model HotmCandidate {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   helperId String
   guildId  String
@@ -61,22 +61,22 @@ model HOTM {
   @@unique([guildId, helperId])
 }
 
-model HOTMBlacklist {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  helperId  String
-  guildId   String
-  permanent Boolean @default(false)
-
-  @@unique([guildId, helperId])
-}
-
-model HOTMUser {
+model HotmVoter {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   userId  String
   guildId String
   voted   String[]
 
   @@unique([guildId, userId])
+}
+
+model HotmBlacklist {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  helperId  String
+  guildId   String
+  permanent Boolean @default(false)
+
+  @@unique([guildId, helperId])
 }
 
 model Punishment {

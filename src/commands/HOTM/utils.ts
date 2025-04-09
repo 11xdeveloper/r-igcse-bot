@@ -39,7 +39,7 @@ export const updateResultsEmbed = async (data: {
 	}
 
 	// Get top 20 helpers by votes
-	const results = await prisma.hOTM.findMany({
+	const results = await prisma.hotmCandidate.findMany({
 		where: { guildId: guild.id },
 		orderBy: { votes: "desc" },
 		take: 20,
